@@ -46,7 +46,9 @@ sprintf(str_fpid, "%d", fpid);
 
 if (!fabrica){
     printf("soy la fabrica\n");
-    for (int i= 0; i < 8; i ++){
+    for (int i= 0; i < 8; i ++){ //make number of 'repartidores' adaptable for input
+      sleep(1);                  //make pacing between 'repartidores' adaptable for input
+      printf("Clock is: 00:0%d\n", i);
       int repartidor_nuevo = fork();
       if (repartidor_nuevo == 0){
         execlp("./repartidor", (char *)NULL);
@@ -63,7 +65,7 @@ if (!fabrica){
   }
   int semaforo_3 = fork();
   if (semaforo_3 == 0){
-        execlp("./semaforo", "3", "6", str_fpid, (char *)NULL);
+        execlp("./semaforo", "2", "6", str_fpid, (char *)NULL);
   }
 }
 
