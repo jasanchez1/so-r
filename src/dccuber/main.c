@@ -4,9 +4,6 @@
 #include <math.h>
 #include "../file_manager/manager.h"
 
-
-
-
 int main(int argc, char const *argv[])
 {
 
@@ -51,21 +48,21 @@ if (!fabrica){
       printf("Clock is: 00:0%d\n", i);
       int repartidor_nuevo = fork();
       if (repartidor_nuevo == 0){
-        execlp("./repartidor", (char *)NULL);
+        execlp("./repartidor", "", "", "", (char *)NULL);
   }
     } 
 } else {
     int semaforo_1 = fork();
   if (semaforo_1 == 0){
-        execlp("./semaforo", "0", "3", str_fpid, (char *)NULL);
+        execlp("./semaforo", "0", "3", str_fpid, (char *)NULL); //Inputs need to be adaptable
   }
-  int semaforo_2 = fork();
-  if (semaforo_2 == 0){
-        execlp("./semaforo", "1", "4", str_fpid, (char *)NULL);
+  int semaforo_2 = fork();                                  
+  if (semaforo_2 == 0){ 
+        execlp("./semaforo", "1", "4", str_fpid, (char *)NULL); //Inputs need to be adaptable
   }
-  int semaforo_3 = fork();
-  if (semaforo_3 == 0){
-        execlp("./semaforo", "2", "6", str_fpid, (char *)NULL);
+  int semaforo_3 = fork(); 
+  if (semaforo_3 == 0){                                         
+        execlp("./semaforo", "2", "6", str_fpid, (char *)NULL); //Inputs need to be adaptable
   }
 }
 
