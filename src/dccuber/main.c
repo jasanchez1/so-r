@@ -42,13 +42,14 @@ char str_fpid[ENOUGH];
 sprintf(str_fpid, "%d", fpid);
 
 if (!fabrica){
+  int alive = 8;                 //make number of 'repartidores' adaptable for input
     printf("soy la fabrica\n");
     for (int i= 0; i < 8; i ++){ //make number of 'repartidores' adaptable for input
       sleep(1);                  //make pacing between 'repartidores' adaptable for input
       printf("Clock is: 00:0%d\n", i);
       int repartidor_nuevo = fork();
       if (repartidor_nuevo == 0){
-        execlp("./repartidor", "", "", "", (char *)NULL);
+        execlp("./repartidor", "2", "3", "5", "9", (char *)NULL);
   }
     } 
 } else {
