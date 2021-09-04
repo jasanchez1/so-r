@@ -42,28 +42,75 @@ char str_fpid[ENOUGH];
 sprintf(str_fpid, "%d", fpid);
 
 if (!fabrica){
-  int alive = 8;                 //make number of 'repartidores' adaptable for input
+  int alive =               8;  //make number of 'repartidores' adaptable for input
+  int pacing =              1;  //make pacing between 'repartidores' adaptable for input                
+  char *distance_storage = "9"; //make pacing between 'ds' adaptable for input
+  char *distance_2 =       "5"; //make pacing between 'd2' adaptable for input
+  char *distance_1 =       "3"; //make pacing between 'd1' adaptable for input
+  char *distance_0 =       "2"; //make pacing between 'd0' adaptable for input
+
+  int pid[alive];
+
+
     printf("soy la fabrica\n");
-    for (int i= 0; i < 8; i ++){ //make number of 'repartidores' adaptable for input
-      sleep(1);                  //make pacing between 'repartidores' adaptable for input
-      printf("Clock is: 00:0%d\n", i);
+    for (int i= 0; i < alive; i ++){ 
+      sleep(pacing);                       
+      
       int repartidor_nuevo = fork();
+      pid[i] = getpid();
       if (repartidor_nuevo == 0){
-        execlp("./repartidor", "2", "3", "5", "9", (char *)NULL);
+        execlp(
+        "./repartidor", 
+        distance_0, 
+        distance_1, 
+        distance_2, 
+        distance_storage, 
+        (char *)NULL
+        );
   }
     } 
 } else {
-    int semaforo_1 = fork();
-  if (semaforo_1 == 0){
-        execlp("./semaforo", "0", "3", str_fpid, (char *)NULL); //Inputs need to be adaptable
+
+  char* delay_0 = "3"; //Delays inputs need to be adaptable
+  char* delay_1 = "3";
+  char* delay_2 = "3";
+
+  char* id_0    = "0";
+  char* id_1    = "1";
+  char* id_2    = "2";
+  
+  int semaforo_0 = fork();
+  if (semaforo_0 == 0){
+  //Creating 'semaforo_0'
+        execlp(
+          "./semaforo", 
+          id_0, 
+          delay_0, 
+          str_fpid, 
+          (char *)NULL
+        ); 
   }
-  int semaforo_2 = fork();                                  
-  if (semaforo_2 == 0){ 
-        execlp("./semaforo", "1", "4", str_fpid, (char *)NULL); //Inputs need to be adaptable
+  int semaforo_1 = fork();                                  
+  if (semaforo_1 == 0){ 
+  //Creating 'semaforo_1'
+        execlp(
+          "./semaforo", 
+          id_1, 
+          delay_1, 
+          str_fpid, 
+          (char *)NULL
+        ); 
   }
-  int semaforo_3 = fork(); 
-  if (semaforo_3 == 0){                                         
-        execlp("./semaforo", "2", "6", str_fpid, (char *)NULL); //Inputs need to be adaptable
+  int semaforo_2 = fork(); 
+  if (semaforo_2 == 0){                                         
+  //Creating 'semaforo_2'
+        execlp(
+          "./semaforo", 
+          id_2, 
+          delay_2, 
+          str_fpid, 
+          (char *)NULL
+        ); 
   }
 }
 
