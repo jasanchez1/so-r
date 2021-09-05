@@ -1,9 +1,13 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <math.h>
 #include "../file_manager/manager.h"
 
+bool s0 = true;
+bool s1 = true;
+bool s2 = true;
 
 char* InttoString(int n){
   char* str_int;
@@ -19,10 +23,25 @@ char* InttoString(int n){
 
 int count = 0;
 
-void KillProcess(int sig, siginfo_t *siginfo, void *ucontext){
-  count ++;
-  int pid = siginfo -> si_value.sival_int;
-  kill(pid, SIGABRT);
+void Manage(int sig, siginfo_t *siginfo, void *ucontext){
+  
+  int option = siginfo -> si_value.sival_int;
+  if (3 < option){
+    count ++;
+    kill(option, SIGABRT);
+
+  } else if(option == 0) {
+      s0 = !s0;
+      printf("change 0\n");
+
+  } else if (option == 1){
+      s1 = !s1;
+      printf("change 1\n");
+
+  } else if (option == 2){
+      s2 = !s2;
+      printf("change 2\n");
+  }
 }
 
 int main(int argc, char const *argv[])
@@ -82,8 +101,10 @@ char* str_fpid = InttoString(getpid());
 
 pid_t repartidor_nuevo;
 if (!fabrica){
-    connect_sigaction(SIGUSR1, KillProcess);
-    printf("soy la fabrica PID: %i\n", getpid());
+  int fabrica_id = getpid();
+    connect_sigaction(SIGUSR1, Manage);
+    
+    printf("soy la fabrica PID: %i\n", fabrica_id);
 
 
 
@@ -115,6 +136,7 @@ if (!fabrica){
   while(count != delivery);
 
 } else {
+
   int semaforo_0 = fork();
   if (semaforo_0 == 0){
   //Creating 'semaforo_0'
@@ -133,7 +155,7 @@ if (!fabrica){
           "./semaforo", 
           id_1, 
           delay_1, 
-          str_fpid, 
+          str_fpid,
           (char *)NULL
         ); 
   }
@@ -144,11 +166,10 @@ if (!fabrica){
           "./semaforo", 
           id_2, 
           delay_2, 
-          str_fpid, 
+          str_fpid,
           (char *)NULL
         ); 
   }
-  
 }
   printf("Liberando memoria...\n");
   input_file_destroy(data_in);

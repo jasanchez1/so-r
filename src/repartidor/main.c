@@ -4,6 +4,11 @@
 #include <stdbool.h>
 #include "../file_manager/manager.h"
 
+bool s0 = true;
+bool s1 = true;
+bool s2 = true;
+
+
   void  EndProcess(int sig){
           //Outputting info in file
         printf("Finishin gracefully %i\n", getpid());
@@ -48,18 +53,22 @@ int main(int argc, char const *argv[])
     // This sets the clock as needed for recording time taken from A to B
      if (position == distance_0){
           t0 = clock;
+          if (s0){
+            position++;
+          }
         }
         else if(position == distance_1){
           t1 = clock;
+          if (s1){
+            position++;
+          }
         }
         else {
+          if(s2){
+            position++;
+          }
           t2 = clock;
         }
-
-        clock += 2; //This shouldn't go, it's just to make sense of the sleep(3) bellow line
-        sleep(3); //Placeholder, should ask for 'semaforo' state
-        position++;
-        printf("Repartor PID: %i, ID: %i just advanced to position: %i\n", getpid(), r_id, position);
 
     }
     else if (position == distance_storage){
@@ -75,12 +84,11 @@ int main(int argc, char const *argv[])
         fprintf(fp, "%i,%i,%i,%i",t0, t1, t2, t3);
         fclose(fp);
 
-        
-
         //Literally reports that it wants to be killed
         signal(SIGABRT, EndProcess);
         send_signal_with_int(fpid, getpid());
         sleep(3);
+        exit(0);
 
     }
     else {
