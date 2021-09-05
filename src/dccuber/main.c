@@ -5,6 +5,18 @@
 #include "../file_manager/manager.h"
 
 
+char* InttoString(int n){
+  char* str_int;
+  if (n != 0){
+    int ENOUGH = ((ceil(log10(n))+1)*sizeof(char)); //To make just enough space for the array
+    str_int = malloc(ENOUGH);
+  } else {
+    str_int = malloc(1*sizeof(char));
+  }
+  sprintf(str_int, "%d", n);
+  return str_int;
+}
+
 int main(int argc, char const *argv[])
 {
 
@@ -57,14 +69,10 @@ char* id_2    =          "2";
 int fabrica;
 fabrica = fork(); //fabrica
 
-int fpid = getpid();
-int ENOUGH = ((ceil(log10(fpid))+1)*sizeof(char)); //To make just enough space for the array
-char str_fpid[ENOUGH];
-sprintf(str_fpid, "%d", fpid);
+char* str_fpid = InttoString(getpid());
 
 if (!fabrica){
   int pid[delivery];
-
 
     printf("soy la fabrica\n");
     for (int i= 0; i < delivery; i ++){ 
@@ -78,11 +86,12 @@ if (!fabrica){
         distance_0, 
         distance_1, 
         distance_2, 
-        distance_storage, 
+        distance_storage,
+        InttoString(i),
         (char *)NULL
         );
-  }
-    } 
+    }
+  } 
 } else {
   int semaforo_0 = fork();
   if (semaforo_0 == 0){
