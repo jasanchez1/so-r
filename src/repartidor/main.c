@@ -34,27 +34,30 @@ int main(int argc, char const *argv[])
     clock ++;
     if (position == distance_0 || position == distance_1 || position == distance_2){ //It's in a 'semaforo' should ask for state
 
-        clock += 2; //This shouldn't go, it's just to make sense of the sleep(3) bellow line
-        sleep(3); //Placeholder, should ask for 'semaforo' state
-        position++;
-        printf("Repartor PID: %i, ID: %i just advanced to position: %i\n", getpid(), r_id, position);
-
-        if (position == distance_0){
+    // This sets the clock as needed for recording time taken from A to B
+     if (position == distance_0){
           t0 = clock;
         }
         else if(position == distance_1){
           t1 = clock;
         }
-        else if(position == distance_2){
+        else {
           t2 = clock;
-        } else {
-          t3 = clock;
         }
+
+        clock += 2; //This shouldn't go, it's just to make sense of the sleep(3) bellow line
+        sleep(3); //Placeholder, should ask for 'semaforo' state
+        position++;
+        printf("Repartor PID: %i, ID: %i just advanced to position: %i\n", getpid(), r_id, position);
+
     }
     else if (position == distance_storage){
         printf("Repartor PID: %i just arrived\n", getpid());
         //gets killed
         alive = false;
+
+        //Setting arrival clock 
+        t3 = clock;
 
         //Outputting info in file
         char filename[sizeof "./repartidor_x.txt"];
