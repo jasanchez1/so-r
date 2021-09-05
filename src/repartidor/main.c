@@ -17,7 +17,8 @@ int main(int argc, char const *argv[])
 
     if (position == distance_0 || position == distance_1 || position == distance_2){ //It's in a 'semaforo' should ask for state
         sleep(3); //Placeholder, should ask for 'semaforo state'
-        position++; 
+        position++;
+        printf("Repartor PID: %i just advanced to position: %i\n", getpid(), position); 
     }
     else if (position == distance_storage){
         printf("Repartor PID: %i just arrived\n", getpid());

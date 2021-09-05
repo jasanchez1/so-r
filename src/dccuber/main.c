@@ -4,6 +4,7 @@
 #include <math.h>
 #include "../file_manager/manager.h"
 
+
 int main(int argc, char const *argv[])
 {
 
@@ -20,7 +21,7 @@ int main(int argc, char const *argv[])
   for (int i = 0; i < 4; i++)
   {
     printf("%s, ", data_in->lines[0][i]);
-    //printf(split_by_sep(data_in->lines[0][i], "-"));
+
   }
   printf("\n");
 
@@ -28,10 +29,30 @@ int main(int argc, char const *argv[])
   for (int i = 0; i < 5; i++)
   {
     printf("%s, ", data_in->lines[1][i]);
-    //printf(split_by_sep(data_in->lines[1][i]));
+
   }
   printf("\n");
 
+//Setting variables from input data
+
+//Distances          
+char *distance_storage = data_in->lines[0][3];
+char *distance_2 =       data_in->lines[0][2];
+char *distance_1 =       data_in->lines[0][1];
+char *distance_0 =       data_in->lines[0][0];
+
+//Timming lines
+int pacing =             atoi(data_in->lines[1][0]);
+int delivery =           atoi(data_in->lines[1][1]);     
+
+char* delay_0 =          data_in->lines[1][2]; 
+char* delay_1 =          data_in->lines[1][3];
+char* delay_2 =          data_in->lines[1][4];
+
+//Unique id's
+char* id_0    =          "0";
+char* id_1    =          "1";
+char* id_2    =          "2";
 
 int fabrica;
 fabrica = fork(); //fabrica
@@ -42,22 +63,15 @@ char str_fpid[ENOUGH];
 sprintf(str_fpid, "%d", fpid);
 
 if (!fabrica){
-  int alive =               8;  //make number of 'repartidores' adaptable for input
-  int pacing =              1;  //make pacing between 'repartidores' adaptable for input                
-  char *distance_storage = "9"; //make pacing between 'ds' adaptable for input
-  char *distance_2 =       "5"; //make pacing between 'd2' adaptable for input
-  char *distance_1 =       "3"; //make pacing between 'd1' adaptable for input
-  char *distance_0 =       "2"; //make pacing between 'd0' adaptable for input
-
-  int pid[alive];
+  int pid[delivery];
 
 
     printf("soy la fabrica\n");
-    for (int i= 0; i < alive; i ++){ 
+    for (int i= 0; i < delivery; i ++){ 
       sleep(pacing);                       
       
       int repartidor_nuevo = fork();
-      pid[i] = getpid();
+      pid[i] = getpid(); //Saves 'repartidores pid'
       if (repartidor_nuevo == 0){
         execlp(
         "./repartidor", 
@@ -70,15 +84,6 @@ if (!fabrica){
   }
     } 
 } else {
-
-  char* delay_0 = "3"; //Delays inputs need to be adaptable
-  char* delay_1 = "3";
-  char* delay_2 = "3";
-
-  char* id_0    = "0";
-  char* id_1    = "1";
-  char* id_2    = "2";
-  
   int semaforo_0 = fork();
   if (semaforo_0 == 0){
   //Creating 'semaforo_0'
