@@ -4,10 +4,19 @@
 #include <stdbool.h>
 #include "../file_manager/manager.h"
 
+  void  EndProcess(int sig){
+          //Outputting info in file
+        printf("Finishin gracefully %i\n", getpid());
+        exit(0);
+}
+
 int main(int argc, char const *argv[])
 {
+
   
   bool alive = true;                     //supr when signals are working
+
+  int fpid              = atoi(argv[5]); //parent pid
   int r_id              = atoi(argv[4]); //Distance from 'semaforo 0'
   int distance_storage  = atoi(argv[3]); //Distance from 'bodega'
   int distance_2        = atoi(argv[2]); //Distance from 'semaforo 2'
@@ -30,6 +39,8 @@ int main(int argc, char const *argv[])
   int t2 =    0;
   int t3 =    0;
 
+  
+  
   while(alive){
     clock ++;
     if (position == distance_0 || position == distance_1 || position == distance_2){ //It's in a 'semaforo' should ask for state
@@ -52,9 +63,7 @@ int main(int argc, char const *argv[])
 
     }
     else if (position == distance_storage){
-        printf("Repartor PID: %i just arrived\n", getpid());
-        //gets killed
-        alive = false;
+        printf("Repartor PID: %i just arrived, fpid: %i\n", getpid(), fpid);
 
         //Setting arrival clock 
         t3 = clock;
@@ -64,6 +73,14 @@ int main(int argc, char const *argv[])
         sprintf(filename, "./repartidor_%i.txt", r_id);
         FILE *fp = fopen(filename, "w");
         fprintf(fp, "%i,%i,%i,%i",t0, t1, t2, t3);
+        fclose(fp);
+
+        
+
+        //Literally reports that it wants to be killed
+        signal(SIGABRT, EndProcess);
+        send_signal_with_int(fpid, getpid());
+        sleep(3);
 
     }
     else {

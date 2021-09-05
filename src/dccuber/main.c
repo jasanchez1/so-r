@@ -17,6 +17,14 @@ char* InttoString(int n){
   return str_int;
 }
 
+int count = 0;
+
+void KillProcess(int sig, siginfo_t *siginfo, void *ucontext){
+  count ++;
+  int pid = siginfo -> si_value.sival_int;
+  kill(pid, SIGABRT);
+}
+
 int main(int argc, char const *argv[])
 {
 
@@ -66,20 +74,29 @@ char* id_0    =          "0";
 char* id_1    =          "1";
 char* id_2    =          "2";
 
+
 int fabrica;
 fabrica = fork(); //fabrica
 
 char* str_fpid = InttoString(getpid());
 
+pid_t repartidor_nuevo;
 if (!fabrica){
-  int pid[delivery];
+    connect_sigaction(SIGUSR1, KillProcess);
+    printf("soy la fabrica PID: %i\n", getpid());
 
-    printf("soy la fabrica\n");
+
+
     for (int i= 0; i < delivery; i ++){ 
       sleep(pacing);                       
       
-      int repartidor_nuevo = fork();
-      pid[i] = getpid(); //Saves 'repartidores pid'
+       repartidor_nuevo= fork();
+      /*if(repartidor_nuevo > 0){
+
+        int status;
+        waitpid(repartidor_nuevo, &status, 0);
+      }*/
+
       if (repartidor_nuevo == 0){
         execlp(
         "./repartidor", 
@@ -88,10 +105,15 @@ if (!fabrica){
         distance_2, 
         distance_storage,
         InttoString(i),
+        str_fpid,
         (char *)NULL
         );
-    }
-  } 
+
+        _exit(EXIT_FAILURE);   // exec never returns
+      } 
+  }
+  while(count != delivery);
+
 } else {
   int semaforo_0 = fork();
   if (semaforo_0 == 0){
@@ -126,8 +148,8 @@ if (!fabrica){
           (char *)NULL
         ); 
   }
+  
 }
-
   printf("Liberando memoria...\n");
   input_file_destroy(data_in);
 }

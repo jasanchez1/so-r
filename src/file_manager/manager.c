@@ -120,7 +120,7 @@ void connect_sigaction(int sig, void (*handler)(int, siginfo_t *, void *))
  * @param payload: Payload to send along with the signal
 */
 void send_signal_with_int(int pid, int payload)
-{
+{ 
   union sigval sig = {};
   sig.sival_int = payload;
   sigqueue(pid, SIGUSR1, sig);

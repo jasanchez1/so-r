@@ -29,6 +29,7 @@ int main(int argc, char const *argv[])
       sprintf(filename, "./semaforo_%i.txt", id);
       FILE *fp = fopen(filename, "w");
       fprintf(fp, "%i" ,counter);
+      fclose(fp);
     }
   }
 }
