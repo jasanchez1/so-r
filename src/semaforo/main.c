@@ -7,27 +7,46 @@
 #include "../file_manager/manager.h"
 
 
+bool alive = true;
+bool shout = false;
+
+void EndProcess(int sig){
+  alive = false;
+  printf("semaforo killed\n");
+}
+
+void SignalChange(int sig){
+  shout = true;
+}
+
 int main(int argc, char const *argv[])
 { 
+
+  signal(SIGABRT, EndProcess);
+  signal(SIGALRM, SignalChange);
   bool state = true; // true means green light, otherwise red
-  bool alive = true;
+
   int counter = 0;   //Temporal counter for killing proceses, supr when signals are implemented   
   
   int parent_pid = atoi(argv[2]) +1;
   int delay      = atoi(argv[1]);
   int id         = atoi(argv[0]);
 
-  //printf("I'm the SEMAFORO process and my PID is: %i\n", parent_pid);
+  printf("I'm the SEMAFORO process and my PID is: %i\n", getpid());
+  alarm(delay);
   while(alive){
-    sleep(delay);
-    state = !state;
     
-    send_signal_with_int(parent_pid, id);
+    state = !state;
+
+    if(shout) {
+      send_signal_with_int(parent_pid, id);
+      alarm(delay);
+      shout = !shout;
+    }
     
     //printf("PID: %i Color: %i\n", getpid(), state);
     counter++;
-    if (counter ==10){ //supr when done with signals
-      alive = false;
+    if (!alive){ //supr when done with signals
 
       //Creating outputfile
       char filename[sizeof "./semaforo_x.txt"];
@@ -35,7 +54,9 @@ int main(int argc, char const *argv[])
       FILE *fp = fopen(filename, "w");
       fprintf(fp, "%i" ,counter);
       fclose(fp);
+
     }
   }
+
 }
 

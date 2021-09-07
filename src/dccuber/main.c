@@ -9,6 +9,9 @@ bool s0 = true;
 bool s1 = true;
 bool s2 = true;
 
+int semaforos[3];
+
+
 char* InttoString(int n){
   char* str_int;
   if (n != 0){
@@ -93,6 +96,8 @@ char* id_0    =          "0";
 char* id_1    =          "1";
 char* id_2    =          "2";
 
+int repartidores[delivery];
+
 
 int fabrica;
 fabrica = fork(); //fabrica
@@ -112,6 +117,7 @@ if (!fabrica){
       sleep(pacing);                       
       
        repartidor_nuevo= fork();
+       repartidores[i] = getpid();
       /*if(repartidor_nuevo > 0){
 
         int status;
@@ -131,15 +137,29 @@ if (!fabrica){
         );
 
         _exit(EXIT_FAILURE);   // exec never returns
-      } 
+      }
   }
-  while(count != delivery);
+  while(count < delivery){
+    //for (int h = 0; h < delivery; h ++){
+      //send_signal_with_int(repartidores[h], getpid());
+    //}
+    ;
+  }
+  for(int w = 1; w <4; w++){
+    pid_t tokill = fabrica_id + w;
+    kill(tokill, SIGABRT);
+    printf("Killing pid: %i\n", fabrica_id);
+    sleep(1);
+  }
 
 } else {
+
+  int main_pid = getpid();
 
   int semaforo_0 = fork();
   if (semaforo_0 == 0){
   //Creating 'semaforo_0'
+    semaforos[0] = getpid();
         execlp(
           "./semaforo", 
           id_0, 
@@ -151,6 +171,7 @@ if (!fabrica){
   int semaforo_1 = fork();                                  
   if (semaforo_1 == 0){ 
   //Creating 'semaforo_1'
+  semaforos[1] = getpid();
         execlp(
           "./semaforo", 
           id_1, 
@@ -162,6 +183,7 @@ if (!fabrica){
   int semaforo_2 = fork(); 
   if (semaforo_2 == 0){                                         
   //Creating 'semaforo_2'
+  semaforos[2] = getpid();
         execlp(
           "./semaforo", 
           id_2, 
@@ -170,7 +192,11 @@ if (!fabrica){
           (char *)NULL
         ); 
   }
+  if (main_pid = getpid()){
+    printf("main pid: %i \n", main_pid);
+  } 
 }
+  
   printf("Liberando memoria...\n");
   input_file_destroy(data_in);
 }
