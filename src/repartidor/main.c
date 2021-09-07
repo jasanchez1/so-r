@@ -13,22 +13,16 @@ bool move = true;
   //printf("Updating");
   int option = siginfo -> si_value.sival_int;
   if(option == 0){
-    s0 = false;
+    s0 = !s0;
   } else if(option == 1){
-    s0 = true;
-  } else if(option == 10){
-    s1 = false;
-  } else if(option == 11){
-    s1 = true;
-  } else if(option == 20){
-    s2 = false;
+    s1 = !s1;
   } else{
-    s2 = true;
-  }
+    s2 = !s2;
+  } 
 }
   void  EndProcess(int sig){
           //Outputting info in file
-        printf("Finishin gracefully %i\n", getpid());
+        printf("Finishing gracefully %i\n", getpid());
         exit(0);
   }
 

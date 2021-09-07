@@ -10,7 +10,8 @@ bool s1 = true;
 bool s2 = true;
 
 int semaforos[3];
-
+int* repartidores;
+int D;
 
 char* InttoString(int n){
   char* str_int;
@@ -33,36 +34,10 @@ void Manage(int sig, siginfo_t *siginfo, void *ucontext){
     count ++;
     kill(option, SIGABRT);
 
-  } else if(option == 0) {
-      s0 = !s0;
-      printf("change 0\n");
-
-  } else if (option == 1){
-      s1 = !s1;
-      printf("change 1\n");
-
-  } else if (option == 2){
-      s2 = !s2;
-      printf("change 2\n");
   } else {
-
-    // Semaforo update
-
-    if(s0){
-        send_signal_with_int(-1*option, 1);
-      } else {
-        send_signal_with_int(-1*option, 0);
-      }
-    if(s1){
-        send_signal_with_int(-1*option, 11);
-      } else {
-        send_signal_with_int(-1*option, 10);
-      }
-    if(s2){
-        send_signal_with_int(-1*option, 21);
-      } else {
-        send_signal_with_int(-1*option, 20);
-      }
+    for (int i = 0; i < D; i++){
+      send_signal_with_int(repartidores[i], option);
+    }
   }
 }
 
@@ -106,6 +81,9 @@ char *distance_0 =       data_in->lines[0][0];
 int pacing =             atoi(data_in->lines[1][0]);
 int delivery =           atoi(data_in->lines[1][1]);     
 
+D = delivery;
+repartidores = calloc(delivery,sizeof(int));
+
 char* delay_0 =          data_in->lines[1][2]; 
 char* delay_1 =          data_in->lines[1][3];
 char* delay_2 =          data_in->lines[1][4];
@@ -116,7 +94,6 @@ char* id_1    =          "1";
 char* id_2    =          "2";
 
 int repartidores[delivery];
-
 
 int fabrica;
 fabrica = fork(); //fabrica
