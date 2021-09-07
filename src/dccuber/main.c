@@ -44,6 +44,25 @@ void Manage(int sig, siginfo_t *siginfo, void *ucontext){
   } else if (option == 2){
       s2 = !s2;
       printf("change 2\n");
+  } else {
+
+    // Semaforo update
+
+    if(s0){
+        send_signal_with_int(-1*option, 1);
+      } else {
+        send_signal_with_int(-1*option, 0);
+      }
+    if(s1){
+        send_signal_with_int(-1*option, 11);
+      } else {
+        send_signal_with_int(-1*option, 10);
+      }
+    if(s2){
+        send_signal_with_int(-1*option, 21);
+      } else {
+        send_signal_with_int(-1*option, 20);
+      }
   }
 }
 
@@ -192,11 +211,12 @@ if (!fabrica){
           (char *)NULL
         ); 
   }
-  if (main_pid = getpid()){
-    printf("main pid: %i \n", main_pid);
+  if (main_pid == getpid()){
+    waitpid(getpid()+2);
   } 
 }
   
   printf("Liberando memoria...\n");
   input_file_destroy(data_in);
+  exit(0);
 }

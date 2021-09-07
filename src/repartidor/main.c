@@ -9,7 +9,23 @@ bool s1 =   true;
 bool s2 =   true;
 bool move = true;
 
-
+  void ManageStops(int sig, siginfo_t *siginfo, void *ucontext){
+  //printf("Updating");
+  int option = siginfo -> si_value.sival_int;
+  if(option == 0){
+    s0 = false;
+  } else if(option == 1){
+    s0 = true;
+  } else if(option == 10){
+    s1 = false;
+  } else if(option == 11){
+    s1 = true;
+  } else if(option == 20){
+    s2 = false;
+  } else{
+    s2 = true;
+  }
+}
   void  EndProcess(int sig){
           //Outputting info in file
         printf("Finishin gracefully %i\n", getpid());
@@ -22,7 +38,7 @@ bool move = true;
 
 int main(int argc, char const *argv[])
 {
-
+  connect_sigaction(SIGUSR1, ManageStops);
   signal(SIGABRT, EndProcess);  
   signal(SIGALRM, Move);
   bool alive = true;                     //supr when signals are working

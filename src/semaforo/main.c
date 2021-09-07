@@ -54,7 +54,7 @@ int main(int argc, char const *argv[])
       FILE *fp = fopen(filename, "w");
       fprintf(fp, "%i" ,counter);
       fclose(fp);
-
+      exit(0);
     }
   }
 
