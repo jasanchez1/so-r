@@ -41,8 +41,26 @@ void Manage(int sig, siginfo_t *siginfo, void *ucontext){
   }
 }
 
+  void TerminateDelivery(int sig){
+    for (int i = 0; i < D; i++){
+      kill(repartidores[i], SIGABRT);
+      sleep(2);
+      exit(0);
+     
+    }
+  }
+
+  void GlobalFinish(int sig){
+    for (int h =1; h< 5; h++){
+      kill(getpid() + h, SIGABRT);
+      sleep(2);
+      exit(0);
+    }
+  }
+
 int main(int argc, char const *argv[])
 {
+  signal(SIGINT, GlobalFinish);
 
   printf("I'm the DCCUBER process and my PID is: %i\n", getpid());
 
@@ -101,6 +119,7 @@ char* str_fpid = InttoString(getpid());
 
 pid_t repartidor_nuevo;
 if (!fabrica){
+  signal(SIGABRT, TerminateDelivery);
   int fabrica_id = getpid();
     connect_sigaction(SIGUSR1, Manage);
     
@@ -181,11 +200,14 @@ if (!fabrica){
           (char *)NULL
         ); 
   }
+  semaforos[0] = semaforo_0;
+  semaforos[1] = semaforo_1;
+  semaforos[2] = semaforo_2;
+
   if (main_pid == getpid()){
     waitpid(getpid()+2);
   } 
 }
-  
   printf("Liberando memoria...\n");
   input_file_destroy(data_in);
   exit(0);

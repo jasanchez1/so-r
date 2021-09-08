@@ -22,7 +22,7 @@ bool move = true;
 }
   void  EndProcess(int sig){
           //Outputting info in file
-        printf("Finishing gracefully %i\n", getpid());
+        //printf("Finishing gracefully %i\n", getpid());
         exit(0);
   }
 
@@ -45,13 +45,6 @@ int main(int argc, char const *argv[])
   int distance_0        = atoi(argv[0]) - 1; //Distance from 'semaforo 0'
   int position          = 0;             //Current position
 
-  printf("I'm the REPARTIDOR process and my PID is: %i\n  distance_0: %i, disatance_1: %i, distance_2: %i, distance_storage: %i, rid: %i\n", 
-          getpid(), 
-          distance_storage,
-          distance_2,   
-          distance_1,   
-          distance_0,       
-          r_id);
 
   //registering time
   int clock = 0; //handles general time
@@ -69,22 +62,25 @@ int main(int argc, char const *argv[])
       if(move){alarm(1);}
     // This sets the clock as needed for recording time taken from A to B
      if (position == distance_0){
-          t0 = clock;
+          
           if (s0){
             position++;
+            t0 = clock;
           }
         }
         else if(position == distance_1){
-          t1 = clock;
+          
           if (s1){
             position++;
+            t1 = clock;
           }
         }
         else {
           if(s2){
             position++;
+            t2 = clock;
           }
-          t2 = clock;
+          
         }
 
     }
@@ -113,7 +109,7 @@ int main(int argc, char const *argv[])
         
         alarm(1);
         position++;
-        printf("Repartor PID: %i just advanced to position: %i\n", getpid(), position);
+        //printf("Repartor PID: %i just advanced to position: %i\n", getpid(), position);
     }
     move = false;
   }
