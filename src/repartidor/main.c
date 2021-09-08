@@ -10,7 +10,7 @@ bool s2 =   true;
 bool move = true;
 
   void ManageStops(int sig, siginfo_t *siginfo, void *ucontext){
-  //printf("Updating");
+  
   int option = siginfo -> si_value.sival_int;
   if(option == 0){
     s0 = !s0;

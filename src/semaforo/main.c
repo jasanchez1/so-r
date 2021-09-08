@@ -42,10 +42,11 @@ int main(int argc, char const *argv[])
       send_signal_with_int(parent_pid, id);
       alarm(delay);
       shout = !shout;
+      counter++;
     }
     
     //printf("PID: %i Color: %i\n", getpid(), state);
-    counter++;
+  
     if (!alive){ //supr when done with signals
 
       //Creating outputfile

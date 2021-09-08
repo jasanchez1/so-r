@@ -33,10 +33,10 @@ void Manage(int sig, siginfo_t *siginfo, void *ucontext){
   if (3 < option){
     count ++;
     kill(option, SIGABRT);
-
   } else {
     for (int i = 0; i < D; i++){
       send_signal_with_int(repartidores[i], option);
+     
     }
   }
 }
@@ -93,7 +93,6 @@ char* id_0    =          "0";
 char* id_1    =          "1";
 char* id_2    =          "2";
 
-int repartidores[delivery];
 
 int fabrica;
 fabrica = fork(); //fabrica
@@ -113,13 +112,6 @@ if (!fabrica){
       sleep(pacing);                       
       
        repartidor_nuevo= fork();
-       repartidores[i] = getpid();
-      /*if(repartidor_nuevo > 0){
-
-        int status;
-        waitpid(repartidor_nuevo, &status, 0);
-      }*/
-
       if (repartidor_nuevo == 0){
         execlp(
         "./repartidor", 
@@ -134,6 +126,7 @@ if (!fabrica){
 
         _exit(EXIT_FAILURE);   // exec never returns
       }
+      repartidores[i] = repartidor_nuevo;
   }
   while(count < delivery){
     //for (int h = 0; h < delivery; h ++){
